@@ -1,0 +1,48 @@
+export const weddingConfig = {
+  coupleName: "Rosario & Ignacio",
+  weddingDate: "2026-10-17T18:30:00",
+  weddingDateLabel: "17 de octubre de 2026",
+  weddingTime: "18:30 hrs",
+  venueName: "Villa Serena",
+  venueAddress: "Camino El Alba 1234, Lo Barnechea, Santiago",
+  venueDescription: "Un jardín íntimo con vistas al cielo y una experiencia de lujo para una velada inolvidable.",
+  googleMapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Villa+Serena+Lo+Barnechea+Santiago",
+  wazeUrl:
+    "https://waze.com/ul?q=Villa%20Serena%20Lo%20Barnechea%20Santiago&navigate=yes",
+  calendarTitle: "Matrimonio Rosario & Ignacio",
+  calendarDescription: "Celebración de boda en Villa Serena",
+  calendarLocation: "Villa Serena, Lo Barnechea, Santiago",
+  calendarStartDate: "20261017T183000",
+  calendarEndDate: "20261017T230000",
+  calendarFile: "/rosario-ignacio.ics",
+  spotifyPlaylistUrl: "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=74f0b9909843472d",
+  sharedAlbumUrl: "https://drive.google.com/drive/folders/1ABC123xyz",
+  whatsappShareUrl: "https://wa.me/?text=Te%20invito%20a%20compartir%20este%20día%20tan%20especial%20con%20nosotros%20Rosario%20%26%20Ignacio.",
+  whatsappContactUrl: "https://wa.me/56912345678?text=Hola%2C%20necesito%20coordinar%20transporte%20para%20el%20matrimonio.",
+  hotels: [
+    {
+      name: "Hotel Cumbres",
+      distance: "8 min",
+      description: "Una stay de diseño sobrio y servicio impecable para quienes prefieren comodidad y discreción.",
+      url: "https://www.example.com/hotel-cumbres",
+    },
+    {
+      name: "The Olive House",
+      distance: "12 min",
+      description: "Elegancia atemporal, jardines y vistas, ideal para una estancia tranquila antes del evento.",
+      url: "https://www.example.com/the-olive-house",
+    },
+    {
+      name: "Casa de Altura",
+      distance: "15 min",
+      description: "Un retiro boutique perfecto para quienes buscan una experiencia tranquila y refinada.",
+      url: "https://www.example.com/casa-de-altura",
+    },
+  ],
+  dressCode: "Tenida formal.",
+  dressNotes: ["Traje oscuro o tonos tierra", "Accesorios discretos", "Elegancia en todos los detalles"],
+  formEndpoint: "/api/confirm",
+  gratitudeText: "Estamos muy felices de celebrar este día junto a ustedes.",
+  footerSignature: "Rosario & Ignacio",
+};
