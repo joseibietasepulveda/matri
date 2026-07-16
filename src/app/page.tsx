@@ -282,57 +282,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="confirmar" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
-          <div className="max-w-2xl">
-            <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Confirmar asistencia</p>
-            <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Tu presencia es muy importante</h2>
-          </div>
-            <form onSubmit={handleSubmit} className="mt-10 grid gap-6">
-              <div>
-                <label htmlFor="name" className="mb-2 block text-sm font-medium text-stone-700">Nombre</label>
-                <input id="name" value={formData.name} onChange={(event) => setFormData({ ...formData, name: event.target.value })} className="w-full rounded-full border border-stone-300 bg-white px-4 py-3 outline-none ring-0" />
-                {errors.name ? <p className="mt-2 text-sm text-red-600">{errors.name}</p> : null}
-              </div>
-              <div>
-                <label htmlFor="attendance" className="mb-2 block text-sm font-medium text-stone-700">¿Asistirás?</label>
-                <select id="attendance" value={formData.attendance} onChange={(event) => setFormData({ ...formData, attendance: event.target.value as AttendanceValue })} className="w-full rounded-full border border-stone-300 bg-white px-4 py-3 outline-none">
-                  <option value="">Selecciona una opción</option>
-                  <option value="yes">Sí</option>
-                  <option value="no">No</option>
-                </select>
-                {errors.attendance ? <p className="mt-2 text-sm text-red-600">{errors.attendance}</p> : null}
-              </div>
-              <div>
-                <label htmlFor="hasCompanion" className="mb-2 block text-sm font-medium text-stone-700">¿Tienes acompañante?</label>
-                <select id="hasCompanion" value={formData.hasCompanion} onChange={(event) => setFormData({ ...formData, hasCompanion: event.target.value })} className="w-full rounded-full border border-stone-300 bg-white px-4 py-3 outline-none">
-                  <option value="">Selecciona una opción</option>
-                  <option value="yes">Sí</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
-              {showCompanionField ? (
-                <div>
-                  <label htmlFor="companionName" className="mb-2 block text-sm font-medium text-stone-700">Nombre del acompañante</label>
-                  <input id="companionName" value={formData.companionName} onChange={(event) => setFormData({ ...formData, companionName: event.target.value })} className="w-full rounded-full border border-stone-300 bg-white px-4 py-3 outline-none" />
-                  {errors.companionName ? <p className="mt-2 text-sm text-red-600">{errors.companionName}</p> : null}
-                </div>
-              ) : null}
-              <div>
-                <label htmlFor="restrictions" className="mb-2 block text-sm font-medium text-stone-700">Restricciones alimentarias</label>
-                <input id="restrictions" value={formData.restrictions} onChange={(event) => setFormData({ ...formData, restrictions: event.target.value })} className="w-full rounded-full border border-stone-300 bg-white px-4 py-3 outline-none" />
-              </div>
-              <div>
-                <label htmlFor="comments" className="mb-2 block text-sm font-medium text-stone-700">Comentarios</label>
-                <textarea id="comments" value={formData.comments} onChange={(event) => setFormData({ ...formData, comments: event.target.value })} rows={4} className="w-full rounded-[1.5rem] border border-stone-300 bg-white px-4 py-3 outline-none" />
-              </div>
-              <button type="submit" className="w-full rounded-full bg-[#6f7957] px-5 py-3 font-semibold text-white transition hover:opacity-90 sm:w-auto">
-                Confirmar asistencia
-              </button>
-              {submitted ? <p className="text-sm font-medium text-[#6f7957]">Gracias, tu respuesta fue recibida. Pronto la confirmaremos por correo o WhatsApp.</p> : null}
-            </form>
-        </div>
-      </section>
 
       <section id="recuerdos" className={`scroll-mt-12 px-4 py-20 sm:px-6 lg:px-8 ${isAfterWedding ? 'bg-[#f8f4eb]' : 'bg-[#fcf7ef]'}`}>
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
