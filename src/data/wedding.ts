@@ -1,5 +1,5 @@
 export const weddingConfig = {
-  coupleName: "Rosario & Ignacio",
+  coupleName: "Rosario & José Ignacio",
   weddingDate: "2027-02-20T17:30:00-03:00",
   weddingDateLabel: "20 DE FEBRERO DE 2027",
   weddingTime: "17:30 hrs a 04:00 hrs",
