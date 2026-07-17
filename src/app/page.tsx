@@ -194,19 +194,21 @@ export default function Home() {
       </section>
 
       <section id="como-llegar" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Cómo llegar</p>
-            <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">{weddingConfig.venueAddress}</h2>
-            <p className="mt-6 text-lg leading-8 text-stone-700">{weddingConfig.venueName} ofrece una experiencia íntima y serena, con acceso sencillo desde la ruta principal.</p>
-          </div>
-          <div className="flex flex-col gap-4 rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
-            <a href={weddingConfig.wazeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-[#6f7957] px-5 py-3 text-center font-semibold text-white transition hover:opacity-90">
-              Abrir en Waze
-            </a>
-            <a href={weddingConfig.googleMapsUrl} target="_blank" rel="noreferrer" className="rounded-full border border-stone-300 px-5 py-3 text-center font-semibold text-stone-800 transition hover:bg-stone-50">
-              Abrir en Google Maps
-            </a>
+        <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
+          <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Cómo llegar</p>
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">{weddingConfig.venueName}</h2>
+              <p className="mt-3 text-lg leading-8 text-stone-700">{weddingConfig.venueAddress}</p>
+            </div>
+            <div className="flex flex-col gap-3 sm:min-w-[220px]">
+              <a href={weddingConfig.wazeUrl} target="_blank" rel="noreferrer" className="rounded-full bg-[#6f7957] px-5 py-3 text-center font-semibold text-white transition hover:opacity-90">
+                Abrir en Waze
+              </a>
+              <a href={weddingConfig.googleMapsUrl} target="_blank" rel="noreferrer" className="rounded-full border border-stone-300 px-5 py-3 text-center font-semibold text-stone-800 transition hover:bg-stone-50">
+                Abrir en Google Maps
+              </a>
+            </div>
           </div>
         </div>
       </section>
