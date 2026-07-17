@@ -232,6 +232,111 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="confirmacion" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-8 text-center">
+            <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Confirmación</p>
+            <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Confirma tu asistencia</h2>
+            <p className="mt-3 text-stone-700">Completa el formulario y confirma tu asistencia. Gracias.</p>
+          </div>
+
+          <form
+            className="mx-auto grid max-w-2xl gap-4 rounded-[1rem] border border-stone-200 bg-white/80 p-6"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setErrors({});
+              const payload = {
+                name: formData.name,
+                email: formData.companionName || '',
+                phone: '',
+                rsvp: formData.attendance || 'pending',
+                guestsCount: formData.hasCompanion === 'yes' ? 2 : 1,
+                meal: formData.restrictions,
+                note: formData.comments,
+                timestamp: new Date().toISOString(),
+              };
+
+              try {
+                const res = await fetch('/api/confirm', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload),
+                });
+
+                if (!res.ok) throw new Error('Error enviando la confirmación');
+                setSubmitted(true);
+              } catch (err) {
+                setSubmitted(false);
+                // show minimal error
+                // eslint-disable-next-line no-console
+                console.error(err);
+                setErrors({ name: 'No se pudo enviar. Intenta más tarde.' });
+              }
+            }}
+          >
+            <input
+              aria-label="Nombre"
+              placeholder="Tu nombre"
+              value={formData.name}
+              onChange={(e) => setFormData((s) => ({ ...s, name: e.target.value }))}
+              className="rounded-md border border-stone-200 px-4 py-3"
+              required
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <select
+                value={formData.attendance}
+                onChange={(e) => setFormData((s) => ({ ...s, attendance: e.target.value as any }))}
+                className="rounded-md border border-stone-200 px-4 py-3"
+                required
+              >
+                <option value="">Confirmar asistencia</option>
+                <option value="yes">Asistiré</option>
+                <option value="no">No podré asistir</option>
+              </select>
+
+              <select
+                value={formData.hasCompanion}
+                onChange={(e) => setFormData((s) => ({ ...s, hasCompanion: e.target.value }))}
+                className="rounded-md border border-stone-200 px-4 py-3"
+              >
+                <option value="">¿Traes acompañante?</option>
+                <option value="yes">Sí</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+
+            {showCompanionField && (
+              <input
+                placeholder="Nombre del acompañante"
+                value={formData.companionName}
+                onChange={(e) => setFormData((s) => ({ ...s, companionName: e.target.value }))}
+                className="rounded-md border border-stone-200 px-4 py-3"
+              />
+            )}
+
+            <input
+              placeholder="Restricciones alimentarias"
+              value={formData.restrictions}
+              onChange={(e) => setFormData((s) => ({ ...s, restrictions: e.target.value }))}
+              className="rounded-md border border-stone-200 px-4 py-3"
+            />
+
+            <textarea
+              placeholder="Comentarios / nota"
+              value={formData.comments}
+              onChange={(e) => setFormData((s) => ({ ...s, comments: e.target.value }))}
+              className="min-h-[120px] rounded-md border border-stone-200 px-4 py-3"
+            />
+
+            <div className="flex items-center justify-between gap-4">
+              <button type="submit" className="rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white">Enviar</button>
+              {submitted && <span className="text-green-600">Confirmación enviada. ¡Gracias!</span>}
+            </div>
+          </form>
+        </div>
+      </section>
+
       <section id="quedarte" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-4 text-center sm:text-left">
