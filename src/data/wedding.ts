@@ -37,7 +37,6 @@ export const weddingConfig = {
       distance: "20 min",
       description: "Perfecto para una estadía íntima y acogedora cerca del matrimonio.",
       url: "https://www.example.com/casa-de-altura",
-    }
   ],
   dressCode: "Tenida formal",
 formEndpoint: "/api/confirm",
