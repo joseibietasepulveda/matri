@@ -150,29 +150,36 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="gran-dia" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <section id="gran-dia" className="scroll-mt-12 bg-white px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">El gran día</p>
             <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">{weddingConfig.weddingDateLabel}</h2>
             <div className="mt-8 space-y-4 text-lg leading-8 text-stone-700">
               <p><span className="font-semibold text-stone-900">Hora:</span> {weddingConfig.weddingTime}</p>
               <p><span className="font-semibold text-stone-900">Lugar:</span> {weddingConfig.venueName}</p>
-              <p>{weddingConfig.venueDescription}</p>
               <p>{weddingConfig.venueAddress}</p>
             </div>
+            <div className="mt-8 overflow-hidden rounded-[1.5rem] border border-stone-200 bg-stone-50">
+              <div className="flex h-56 items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(231,220,200,0.45),_transparent_70%)]">
+                <div className="rounded-full border border-stone-300 bg-white/80 p-5 text-4xl shadow-sm">📷</div>
+              </div>
+            </div>
           </div>
-          <div className="rounded-[2rem] border border-stone-200 bg-white/70 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+          <div className="rounded-[2rem] border border-stone-200 bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
             <h3 className="font-serif text-2xl text-stone-800">Agregar a mi calendario</h3>
-            <p className="mt-4 text-stone-600">Elige la app que prefieras y guarda esta fecha.</p>
-            <div className="mt-8 flex flex-col gap-3">
-              <a href={googleCalendarUrl} target="_blank" rel="noreferrer" className="rounded-full border border-stone-300 px-4 py-3 text-center font-medium transition hover:bg-stone-50">
+            <p className="mt-3 text-sm text-stone-600">Elige la app que prefieras y guarda esta fecha.</p>
+            <div className="mt-6 flex flex-col gap-2.5">
+              <a href={googleCalendarUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50">
+                <span className="text-base">📅</span>
                 Google Calendar
               </a>
-              <a href={weddingConfig.calendarFile} download className="rounded-full border border-stone-300 px-4 py-3 text-center font-medium transition hover:bg-stone-50">
+              <a href={weddingConfig.calendarFile} download className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50">
+                <span className="text-base">🍎</span>
                 Apple Calendar (.ics)
               </a>
-              <a href="https://outlook.live.com/calendar/0/addcalendar" target="_blank" rel="noreferrer" className="rounded-full border border-stone-300 px-4 py-3 text-center font-medium transition hover:bg-stone-50">
+              <a href="https://outlook.live.com/calendar/0/addcalendar" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50">
+                <span className="text-base">🪟</span>
                 Outlook
               </a>
             </div>
