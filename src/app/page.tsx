@@ -193,34 +193,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="dress-code" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
-          <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Dress code</p>
-            <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">{weddingConfig.dressCode}</h2>
-            <p className="mt-6 text-lg leading-8 text-stone-700">Elegancia sobria, tonos cálidos y un ambiente refinado para una tarde de celebración.</p>
-          </div>
-          <div className="rounded-[2rem] border border-stone-200 bg-white/70 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
-            <div className="flex flex-wrap gap-3">
-              {['#c7b79b', '#6f7957', '#3f3b33', '#e0c98d'].map((color) => (
-                <div key={color} className="h-14 w-14 rounded-full border border-stone-200" style={{ backgroundColor: color }} />
-              ))}
-            </div>
-            <ul className="mt-8 space-y-3 text-stone-700">
-              {weddingConfig.dressNotes.map((item) => (
-                <li key={item} className="flex items-center gap-3"><span className="h-2.5 w-2.5 rounded-full bg-[#8b7353]" />{item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
-          <Image src="/venue.svg" alt="Lugar del matrimonio" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
-        </div>
-      </section>
-
       <section id="como-llegar" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
