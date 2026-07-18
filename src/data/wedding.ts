@@ -66,7 +66,7 @@ export type WeddingConfig = {
 
 export const weddingConfig: WeddingConfig = {
   coupleName: "Rosario & José Ignacio",
-  weddingDate: "2027-02-20T17:30:00-03:00",
+  weddingDate: "2027-02-20T18:30:00-03:00",
   weddingDateLabel: "20 DE FEBRERO DE 2027",
   weddingTime: "17:30 hrs a 04:00 hrs",
   venueName: "Viñedos Torreón de Paredes",
@@ -78,8 +78,8 @@ export const weddingConfig: WeddingConfig = {
   calendarTitle: "Matrimonio Rosario & Ignacio",
   calendarDescription: "Matrimonio en Rengo",
   calendarLocation: "Viñedos Torreón de Paredes, Rengo, Región de O´Higgins",
-  calendarStartDate: "20270220T173000",
-  calendarEndDate: "20270221T040000",
+  calendarStartDate: "20270220T183000",
+  calendarEndDate: "20270221T050000",
   calendarFile: "/rosario-ignacio.ics",
   spotifyPlaylistUrl: "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=74f0b9909843472d",
   sharedAlbumUrl: "https://drive.google.com/drive/folders/1ABC123xyz",
@@ -89,20 +89,32 @@ export const weddingConfig: WeddingConfig = {
     {
       name: "Hotel Ontiveros",
       distance: "25 min",
-      description: "Ideal para quienes buscan comodidad y acceso sencillo al evento.",
-      url: "https://www.example.com/hotel-cumbres",
+      url: "https://www.booking.com/hotel/cl/ontiveros-san-fernando.es.html?aid=318615&label=Spanish_Chile_ES_CL_21461610385-hXKRja6GSeh%2Ag57L9Njh0AS637942154639%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atidsa-912298704641%3Alp1003325%3Ali%3Adec%3Adm%3Aag21461610385%3Acmp340119025&sid=6d165b09cdf32359d74d2a56f91b0985&dest_id=-900285&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&hpos=1&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1784321849&srpvid=a9d593574dbd0766&type=total&ucfs=1&",
     },
     {
       name: "Hotel Viña Casa Silva",
       distance: "20 min",
-      description: "Una opción elegante y tranquila para disfrutar de la zona.",
-      url: "https://www.example.com/the-olive-house",
+      url: "https://www.casasilva.cl/experiencias/hotel/",
     },
     {
       name: "Hotel Boutique Santa Teresita",
       distance: "20 min",
-      description: "Perfecto para una estadía íntima y acogedora cerca del matrimonio.",
-      url: "https://www.example.com/casa-de-altura",
+      url: "https://www.booking.com/hotel/cl/santa-teresita.es.html?aid=318615&label=Spanish_Chile_ES_CL_21461610385-hXKRja6GSeh%2Ag57L9Njh0AS637942154639%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atidsa-912298704641%3Alp1003325%3Ali%3Adec%3Adm%3Aag21461610385%3Acmp340119025&sid=6d165b09cdf32359d74d2a56f91b0985&dest_id=-900285&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&hpos=1&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1784322720&srpvid=b6a895015b5200d3&type=total&ucfs=1&",
+    },
+    {
+      name: "Hotel Terrado de Rancagua",
+      distance: "25 min",
+      url: "https://terrado.cl/destinos/rancagua/?gad_source=1&gad_campaignid=23933987254&gbraid=0AAAAAqkm-r_DZN5mm3HZNg7-c6IypwffV",
+    },
+    {
+      name: "Hotel Piedra Verde",
+      distance: "25 min",
+      url: "https://hotelpiedraverde.cl/",
+    },
+    {
+      name: "Hotel Hacienda Los Lingues",
+      distance: "15 min",
+      url: "https://www.booking.com/hotel/cl/hacienda-los-lingues.es.html?aid=311839&label=hacienda-los-lingues-nOs1Tv3GQ_s0mu1H%2A5F1rwS175912568791%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-410404240244%3Alp1003325%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YVujEjbMrKBV6ty0ha1YbaI&sid=6d165b09cdf32359d74d2a56f91b0985&dest_id=-890326&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&hpos=1&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1784322572&srpvid=738b94c2a4390393&type=total&ucfs=1&",
     }
   ],
   dressCode: "Tenida formal",
@@ -113,7 +125,7 @@ export const weddingConfig: WeddingConfig = {
   images: {
     cover: "/images/wedding/cover.jpg",
     couple: ["/images/wedding/couple-1.jpg", "/images/wedding/couple-2.jpg"],
-    venue: ["/images/wedding/venue-1.jpg"],
+    venue: ["/images/wedding/venue.jpg"],
     gallery: [],
   },
   guests: [],

@@ -36,38 +36,32 @@ export default function Home() {
   const weddingDate = useMemo(() => new Date(weddingConfig.weddingDate), []);
 
   useEffect(() => {
-    const updateCountdown = () => {
+    const calculateTimeLeft = () => {
       const now = new Date();
       const difference = weddingDate.getTime() - now.getTime();
-      const isSameDay = now.toDateString() === weddingDate.toDateString();
 
-      if (difference < 0 && !isSameDay) {
-        setIsWeddingDay(false);
-        setIsAfterWedding(true);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
+      if (difference <= 0) {
+        setIsWeddingDay(now.toDateString() === weddingDate.toDateString());
+        setIsAfterWedding(now.toDateString() !== weddingDate.toDateString());
+        return { days: 0, hours: 0, minutes: 0, seconds: 0 };
       }
 
-      if (difference <= 0 && isSameDay) {
-        setIsWeddingDay(true);
-        setIsAfterWedding(false);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / (1000 * 60)) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    };
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / (1000 * 60)) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
-
-      setTimeLeft({ days, hours, minutes, seconds });
-      setIsWeddingDay(false);
-      setIsAfterWedding(false);
+    const updateCountdown = () => {
+      setTimeLeft(calculateTimeLeft());
     };
 
     updateCountdown();
-    const interval = window.setInterval(updateCountdown, 1000);
-    return () => window.clearInterval(interval);
+
+    const timer = window.setInterval(updateCountdown, 1000);
+    return () => clearInterval(timer);
   }, [weddingDate]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -90,7 +84,13 @@ export default function Home() {
   };
 
   const showCompanionField = formData.hasCompanion === 'yes';
-  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(weddingConfig.calendarTitle)}&dates=${weddingConfig.calendarStartDate}/${weddingConfig.calendarEndDate}&details=${encodeURIComponent(weddingConfig.calendarDescription)}&location=${encodeURIComponent(weddingConfig.calendarLocation)}`;
+  const calendarTitle = weddingConfig.calendarTitle ?? '';
+  const calendarDescription = weddingConfig.calendarDescription ?? '';
+  const calendarLocation = weddingConfig.calendarLocation ?? '';
+  const calendarStartDate = weddingConfig.calendarStartDate ?? '';
+  const calendarEndDate = weddingConfig.calendarEndDate ?? '';
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarTitle)}&dates=${calendarStartDate}/${calendarEndDate}&details=${encodeURIComponent(calendarDescription)}&location=${encodeURIComponent(calendarLocation)}`;
+  const hotels = weddingConfig.hotels ?? [];
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(245,238,225,0.7),_transparent_60%)] text-stone-800">
@@ -140,6 +140,22 @@ export default function Home() {
                 ))}
               </div>
             )}
+            <div className="mt-8 w-full max-w-2xl">
+              <div className="overflow-hidden rounded-[1.5rem] border border-white/20 bg-white/10 p-2 shadow-[0_20px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm">
+                <div className="relative h-64 overflow-hidden rounded-[1.15rem] bg-[#f2e9dc] sm:h-80">
+                  <Image
+                    src="/images/wedding/compromiso.jpg"
+                    alt="Foto del compromiso de Rosario y Ignacio"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 70vw"
+                    className="object-contain object-center"
+                  />
+                  <div className="absolute left-0 top-0 rounded-br-xl bg-black/25 px-3 py-2 backdrop-blur-sm">
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-stone-100">Compromiso</p>
+                  </div>
+                </div>
+              </div>
+            </div>
             <Link
               href="#gran-dia"
               className="mt-10 inline-flex items-center rounded-full border border-white/30 bg-[#e7dcc8] px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-stone-800 transition hover:scale-[1.02]"
@@ -161,8 +177,14 @@ export default function Home() {
               <p>{weddingConfig.venueAddress}</p>
             </div>
             <div className="mt-8 overflow-hidden rounded-[1.5rem] border border-stone-200 bg-stone-50">
-              <div className="flex h-56 items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(231,220,200,0.45),_transparent_70%)]">
-                <div className="rounded-full border border-stone-300 bg-white/80 p-5 text-4xl shadow-sm">📷</div>
+              <div className="relative h-56 overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(231,220,200,0.45),_transparent_70%)]">
+                <Image
+                  src={weddingConfig.images?.venue?.[0] ?? '/venue.svg'}
+                  alt={`Foto del lugar ${weddingConfig.venueName ?? 'del evento'}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                />
               </div>
             </div>
           </div>
@@ -174,22 +196,12 @@ export default function Home() {
                 <span className="text-base">📅</span>
                 Google Calendar
               </a>
-              <a href={weddingConfig.calendarFile} download className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50">
-                <span className="text-base">🍎</span>
-                Apple Calendar (.ics)
-              </a>
               <a href="https://outlook.live.com/calendar/0/addcalendar" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50">
                 <span className="text-base">🪟</span>
                 Outlook
               </a>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
-          <Image src="/couple-gallery.svg" alt="Rosario y Ignacio" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
         </div>
       </section>
 
@@ -318,6 +330,34 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
+          <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Regalos</p>
+          <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Opciones para regalar</h2>
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            <div className="rounded-[1.5rem] border border-stone-200 bg-stone-50 p-6 text-left">
+              <h3 className="font-serif text-2xl text-stone-800">Lista de novios de Falabella</h3>
+              <p className="mt-3 text-stone-600">Si prefieres regalar algo desde la lista oficial, puedes acceder aquí.</p>
+              <a href="https://www.falabella.com/falabella-cl/collection/lista-de-novios" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+                Ver lista de novios
+              </a>
+            </div>
+
+            <div className="rounded-[1.5rem] border border-stone-200 bg-stone-50 p-6 text-left">
+              <h3 className="font-serif text-2xl text-stone-800">Transferencia bancaria</h3>
+              <div className="mt-4 space-y-2 text-stone-700">
+                <p><span className="font-semibold text-stone-900">Nombre:</span> <span>Rosario Jesús Vial Letelier</span></p>
+                <p><span className="font-semibold text-stone-900">RUT:</span> <span>19.079.773-2</span></p>
+                <p><span className="font-semibold text-stone-900">Banco:</span> <span>Banco de Chile</span></p>
+                <p><span className="font-semibold text-stone-900">Tipo de cuenta:</span> <span>Cuenta Corriente</span></p>
+                <p><span className="font-semibold text-stone-900">Nro. cuenta:</span> <span>00-001-93650-06</span></p>
+                <p><span className="font-semibold text-stone-900">Mail:</span> <span>revial@uc.cl</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="quedarte" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-4 text-center sm:text-left">
@@ -325,11 +365,10 @@ export default function Home() {
             <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">Hoteles recomendados</h2>
           </div>
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {weddingConfig.hotels.map((hotel) => (
+            {hotels.map((hotel) => (
               <article key={hotel.name} className="rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
                 <h3 className="font-serif text-2xl text-stone-800">{hotel.name}</h3>
                 <p className="mt-3 text-sm uppercase tracking-[0.3em] text-[#8b7353]">{hotel.distance}</p>
-                <p className="mt-4 text-stone-700">{hotel.description}</p>
                 <a href={hotel.url} target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-full border border-stone-300 px-4 py-2 text-sm font-medium transition hover:bg-stone-50">
                   Ver hotel
                 </a>
@@ -348,7 +387,7 @@ export default function Home() {
 
       <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
-          <Image src="/couple-gallery.svg" alt="Rosario y Ignacio" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
+          <Image src="/couple-gallery.svg" alt="Compromiso de Rosario y Ignacio" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
         </div>
       </section>
 
@@ -361,13 +400,6 @@ export default function Home() {
           </a>
         </div>
       </section>
-
-      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
-          <Image src="/couple-gallery.svg" alt="Compromiso de Rosario y Ignacio" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
-        </div>
-      </section>
-
 
       <section id="recuerdos" className={`scroll-mt-12 px-4 py-20 sm:px-6 lg:px-8 ${isAfterWedding ? 'bg-[#f8f4eb]' : 'bg-[#fcf7ef]'}`}>
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
