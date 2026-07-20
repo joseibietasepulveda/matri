@@ -49,8 +49,9 @@ export type WeddingConfig = {
   calendarStartDate?: string;
   calendarEndDate?: string;
   calendarFile?: string;
-  spotifyPlaylistUrl?: string;
+  youtubeMusicPlaylistUrl?: string;
   sharedAlbumUrl?: string;
+  whatsappGroupUrl?: string;
   whatsappShareUrl?: string;
   whatsappContactUrl?: string;
   hotels?: Hotel[];
@@ -81,8 +82,9 @@ export const weddingConfig: WeddingConfig = {
   calendarStartDate: "20270220T183000",
   calendarEndDate: "20270221T050000",
   calendarFile: "/rosario-ignacio.ics",
-  spotifyPlaylistUrl: "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=74f0b9909843472d",
+  youtubeMusicPlaylistUrl: "https://music.youtube.com/playlist?list=PLYTAt1dPospo&jct=Ew4DF4zE5hu8Bdr7-Pc8OQ",
   sharedAlbumUrl: "https://drive.google.com/drive/folders/1ABC123xyz",
+  whatsappGroupUrl: "https://chat.whatsapp.com/IrBJdzXdZGMJKAVVfPWSGm?s=sw&p=i&ilr=0",
   whatsappShareUrl: "https://wa.me/?text=Te%20invito%20a%20compartir%20este%20d%C3%ADa%20tan%20especial%20con%20nosotros%20Rosario%20%26%20Ignacio.",
   whatsappContactUrl: "https://wa.me/56912345678?text=Hola%2C%20necesito%20coordinar%20transporte%20para%20el%20matrimonio.",
   hotels: [

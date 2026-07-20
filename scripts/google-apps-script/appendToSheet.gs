@@ -2,18 +2,18 @@
  * Apps Script Web App to receive RSVP POSTs and append to a Google Sheet.
  *
  * Setup:
- * 1. Crear una hoja de cálculo en Google Sheets.
- * 2. Copiar el ID de la hoja (parte en la URL entre /d/ y /edit).
- * 3. Reemplazar SHEET_ID y SHEET_NAME abajo.
- * 4. Publicar -> Implementar como aplicación web -> Ejecutar la aplicación como: "Yo (propietario)" -> Acceso: "Cualquiera, incluso anónimo" (o según tus necesidades).
- * 5. Usar la URL pública en `GOOGLE_APPS_SCRIPT_URL`.
+ * 1. En la planilla, ve a Extensiones -> Apps Script y pega este archivo completo.
+ * 2. Publicar -> Implementar como aplicación web -> Ejecutar como: "Yo" ->
+ *    Acceso: "Cualquiera".
+ * 3. Copia la URL de la aplicación web y úsala como `GOOGLE_APPS_SCRIPT_URL`.
  *
  * Espera recibir JSON POST con campos:
- * { name, email, phone, rsvp, guestsCount, meal, note, timestamp }
+ * { fullName, spouseName, attendance, dietaryRestrictions, message, timestamp }
  */
 
-const SHEET_ID = 'REPLACE_WITH_SHEET_ID';
-const SHEET_NAME = 'Sheet1';
+const SHEET_ID = '1uQTN1qhvf-qXzqp9gmMBSEKC5EtWOLbaBVhb5OMxuGg';
+const SHEET_NAME = 'Confirmaciones';
+const HEADERS = ['Fecha de envío', 'Nombre completo', 'Nombre de marido/señora', 'Asistencia', 'Restricciones alimentarias', 'Mensaje para los novios'];
 
 function doPost(e) {
   try {
@@ -23,17 +23,20 @@ function doPost(e) {
     const data = JSON.parse(content);
 
     const ss = SpreadsheetApp.openById(SHEET_ID);
-    const sheet = ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
+    const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(HEADERS);
+      sheet.setFrozenRows(1);
+    }
 
     const row = [
       data.timestamp || new Date().toISOString(),
-      data.name || '',
-      data.email || '',
-      data.phone || '',
-      data.rsvp || '',
-      data.guestsCount || '',
-      data.meal || '',
-      data.note || ''
+      data.fullName || '',
+      data.spouseName || '',
+      data.attendance === 'yes' ? 'Sí, asistiré' : 'No podré asistir',
+      data.dietaryRestrictions || '',
+      data.message || ''
     ];
 
     sheet.appendRow(row);

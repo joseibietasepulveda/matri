@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { weddingConfig } from '@/data/wedding';
@@ -8,21 +8,19 @@ import { weddingConfig } from '@/data/wedding';
 type AttendanceValue = 'yes' | 'no';
 
 type FormState = {
-  name: string;
+  fullName: string;
+  spouseName: string;
   attendance: AttendanceValue | '';
-  hasCompanion: string;
-  companionName: string;
-  restrictions: string;
-  comments: string;
+  dietaryRestrictions: string;
+  message: string;
 };
 
 const initialFormState: FormState = {
-  name: '',
+  fullName: '',
+  spouseName: '',
   attendance: '',
-  hasCompanion: '',
-  companionName: '',
-  restrictions: '',
-  comments: '',
+  dietaryRestrictions: '',
+  message: '',
 };
 
 export default function Home() {
@@ -64,26 +62,6 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [weddingDate]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const nextErrors: Partial<Record<keyof FormState, string>> = {};
-
-    if (!formData.name.trim()) nextErrors.name = 'Tu nombre es obligatorio.';
-    if (!formData.attendance) nextErrors.attendance = 'Por favor confirma tu asistencia.';
-    if (formData.hasCompanion === 'yes' && !formData.companionName.trim()) {
-      nextErrors.companionName = 'Indica el nombre de tu acompañante.';
-    }
-
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      return;
-    }
-
-    setSubmitted(true);
-  };
-
-  const showCompanionField = formData.hasCompanion === 'yes';
   const calendarTitle = weddingConfig.calendarTitle ?? '';
   const calendarDescription = weddingConfig.calendarDescription ?? '';
   const calendarLocation = weddingConfig.calendarLocation ?? '';
@@ -238,15 +216,20 @@ export default function Home() {
             onSubmit={async (e) => {
               e.preventDefault();
               setErrors({});
+              if (!formData.fullName.trim() || !formData.attendance) {
+                setErrors({
+                  fullName: formData.fullName.trim() ? undefined : 'Ingresa tu nombre completo.',
+                  attendance: formData.attendance ? undefined : 'Elige una opción.',
+                });
+                return;
+              }
+
               const payload = {
-                name: formData.name,
-                email: formData.companionName || '',
-                phone: '',
-                rsvp: formData.attendance || 'pending',
-                guestsCount: formData.hasCompanion === 'yes' ? 2 : 1,
-                meal: formData.restrictions,
-                note: formData.comments,
-                timestamp: new Date().toISOString(),
+                fullName: formData.fullName,
+                spouseName: formData.spouseName,
+                attendance: formData.attendance,
+                dietaryRestrictions: formData.dietaryRestrictions,
+                message: formData.message,
               };
 
               try {
@@ -258,75 +241,74 @@ export default function Home() {
 
                 if (!res.ok) throw new Error('Error enviando la confirmación');
                 setSubmitted(true);
+                setFormData(initialFormState);
               } catch (err) {
                 setSubmitted(false);
                 // show minimal error
-                // eslint-disable-next-line no-console
                 console.error(err);
-                setErrors({ name: 'No se pudo enviar. Intenta más tarde.' });
+                setErrors({ fullName: 'No se pudo enviar. Intenta más tarde.' });
               }
             }}
           >
             <input
-              aria-label="Nombre"
-              placeholder="Tu nombre"
-              value={formData.name}
-              onChange={(e) => setFormData((s) => ({ ...s, name: e.target.value }))}
+              aria-label="Nombre completo"
+              placeholder="Nombre completo"
+              value={formData.fullName}
+              onChange={(e) => setFormData((s) => ({ ...s, fullName: e.target.value }))}
               className="rounded-md border border-stone-200 px-4 py-3"
               required
             />
-
-            <div className="grid grid-cols-2 gap-4">
-              <select
-                value={formData.attendance}
-                onChange={(e) => setFormData((s) => ({ ...s, attendance: e.target.value as any }))}
-                className="rounded-md border border-stone-200 px-4 py-3"
-                required
-              >
-                <option value="">Confirmar asistencia</option>
-                <option value="yes">Asistiré</option>
-                <option value="no">No podré asistir</option>
-              </select>
-
-              <select
-                value={formData.hasCompanion}
-                onChange={(e) => setFormData((s) => ({ ...s, hasCompanion: e.target.value }))}
-                className="rounded-md border border-stone-200 px-4 py-3"
-              >
-                <option value="">¿Traes acompañante?</option>
-                <option value="yes">Sí</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-
-            {showCompanionField && (
-              <input
-                placeholder="Nombre del acompañante"
-                value={formData.companionName}
-                onChange={(e) => setFormData((s) => ({ ...s, companionName: e.target.value }))}
-                className="rounded-md border border-stone-200 px-4 py-3"
-              />
-            )}
+            {errors.fullName && <p className="text-sm text-red-700">{errors.fullName}</p>}
 
             <input
-              placeholder="Restricciones alimentarias"
-              value={formData.restrictions}
-              onChange={(e) => setFormData((s) => ({ ...s, restrictions: e.target.value }))}
+              aria-label="Nombre de marido o señora"
+              placeholder="Nombre de marido / señora (opcional)"
+              value={formData.spouseName}
+              onChange={(e) => setFormData((s) => ({ ...s, spouseName: e.target.value }))}
               className="rounded-md border border-stone-200 px-4 py-3"
             />
 
-            <textarea
-              placeholder="Comentarios / nota"
-              value={formData.comments}
-              onChange={(e) => setFormData((s) => ({ ...s, comments: e.target.value }))}
-              className="min-h-[120px] rounded-md border border-stone-200 px-4 py-3"
+            <fieldset>
+              <legend className="mb-3 text-sm font-medium text-stone-700">¿Podrás acompañarnos?</legend>
+              <div className="grid grid-cols-2 gap-3">
+                <button type="button" aria-pressed={formData.attendance === 'yes'} onClick={() => setFormData((s) => ({ ...s, attendance: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.attendance === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>
+                  Sí, asistiré
+                </button>
+                <button type="button" aria-pressed={formData.attendance === 'no'} onClick={() => setFormData((s) => ({ ...s, attendance: 'no' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.attendance === 'no' ? 'border-stone-500 bg-stone-600 text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>
+                  No podré asistir
+                </button>
+              </div>
+              {errors.attendance && <p className="mt-2 text-sm text-red-700">{errors.attendance}</p>}
+            </fieldset>
+
+            <input
+              placeholder="Restricciones alimentarias"
+              value={formData.dietaryRestrictions}
+              onChange={(e) => setFormData((s) => ({ ...s, dietaryRestrictions: e.target.value }))}
+              className="rounded-md border border-stone-200 px-4 py-3"
             />
+
+            <div className="rounded-xl bg-[#fcf7ef] p-4">
+              <label htmlFor="message" className="font-serif text-xl text-stone-800">¡Déjanos un mensaje, con mucho cariño! ❤️</label>
+              <textarea id="message" placeholder="Tu mensaje para los novios" value={formData.message} onChange={(e) => setFormData((s) => ({ ...s, message: e.target.value }))} className="mt-3 min-h-[120px] w-full rounded-md border border-stone-200 bg-white px-4 py-3" />
+            </div>
 
             <div className="flex items-center justify-between gap-4">
               <button type="submit" className="rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white">Enviar</button>
               {submitted && <span className="text-green-600">Confirmación enviada. ¡Gracias!</span>}
             </div>
           </form>
+        </div>
+      </section>
+
+      <section id="whatsapp" className="scroll-mt-12 bg-white px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+          <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Mantengámonos en contacto</p>
+          <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Únete al grupo de WhatsApp</h2>
+          <p className="mx-auto mt-4 max-w-xl text-stone-700">Compartiremos información y coordinaremos los últimos detalles de esta celebración.</p>
+          <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+            Unirme al grupo de WhatsApp
+          </a>
         </div>
       </section>
 
@@ -395,9 +377,14 @@ export default function Home() {
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-white/80 p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Ayúdanos con la música</p>
           <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">¿Qué canción no puede faltar?</h2>
-          <a href={weddingConfig.spotifyPlaylistUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-            Abrir playlist colaborativa
-          </a>
+          <p className="mx-auto mt-4 max-w-xl text-stone-700">Agrega esas canciones que no pueden faltar en la fiesta.</p>
+          {weddingConfig.youtubeMusicPlaylistUrl ? (
+            <a href={weddingConfig.youtubeMusicPlaylistUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+              Abrir playlist colaborativa en YouTube Music
+            </a>
+          ) : (
+            <p className="mt-8 text-sm text-stone-500">La playlist colaborativa estará disponible muy pronto.</p>
+          )}
         </div>
       </section>
 

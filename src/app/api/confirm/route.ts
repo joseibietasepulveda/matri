@@ -1,30 +1,38 @@
 import { NextResponse } from 'next/server';
 
 type ConfirmPayload = {
-  name: string;
-  email?: string;
-  phone?: string;
-  rsvp: 'yes' | 'no' | 'pending';
-  guestsCount?: number;
-  meal?: string;
-  note?: string;
-  timestamp?: string;
+  fullName: string;
+  spouseName?: string;
+  attendance: 'yes' | 'no';
+  dietaryRestrictions?: string;
+  message?: string;
 };
 
 export async function POST(req: Request) {
   try {
     const data: ConfirmPayload = await req.json();
+    if (!data.fullName?.trim() || !['yes', 'no'].includes(data.attendance)) {
+      return NextResponse.json({ error: 'Datos de confirmación inválidos' }, { status: 400 });
+    }
+
     const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
     if (!scriptUrl) {
       return NextResponse.json({ error: 'GOOGLE_APPS_SCRIPT_URL not configured' }, { status: 500 });
     }
 
-    if (!data.timestamp) data.timestamp = new Date().toISOString();
+    const payload = {
+      fullName: data.fullName.trim(),
+      spouseName: data.spouseName?.trim() ?? '',
+      attendance: data.attendance,
+      dietaryRestrictions: data.dietaryRestrictions?.trim() ?? '',
+      message: data.message?.trim() ?? '',
+      timestamp: new Date().toISOString(),
+    };
 
     const res = await fetch(scriptUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
