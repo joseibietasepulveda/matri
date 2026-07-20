@@ -78,7 +78,9 @@ export default function Home() {
   const isAttending = formData.attendance === 'yes';
   const dietaryRestrictions = formData.dietaryPreference === 'other'
     ? formData.dietaryOther
-    : ({ vegetarian: 'Vegetariano', vegan: 'Vegano', celiac: 'Celíaco' }[formData.dietaryPreference] ?? '');
+    : formData.dietaryPreference
+      ? { vegetarian: 'Vegetariano', vegan: 'Vegano', celiac: 'Celíaco' }[formData.dietaryPreference]
+      : '';
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(245,238,225,0.7),_transparent_60%)] text-stone-800">
