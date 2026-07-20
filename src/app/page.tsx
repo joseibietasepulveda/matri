@@ -9,17 +9,23 @@ type AttendanceValue = 'yes' | 'no';
 
 type FormState = {
   fullName: string;
+  hasCompanion: AttendanceValue | '';
   spouseName: string;
   attendance: AttendanceValue | '';
-  dietaryRestrictions: string;
+  dietaryNeeds: AttendanceValue | '';
+  dietaryPreference: 'vegetarian' | 'vegan' | 'celiac' | 'other' | '';
+  dietaryOther: string;
   message: string;
 };
 
 const initialFormState: FormState = {
   fullName: '',
+  hasCompanion: '',
   spouseName: '',
   attendance: '',
-  dietaryRestrictions: '',
+  dietaryNeeds: '',
+  dietaryPreference: '',
+  dietaryOther: '',
   message: '',
 };
 
@@ -69,6 +75,10 @@ export default function Home() {
   const calendarEndDate = weddingConfig.calendarEndDate ?? '';
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarTitle)}&dates=${calendarStartDate}/${calendarEndDate}&details=${encodeURIComponent(calendarDescription)}&location=${encodeURIComponent(calendarLocation)}`;
   const hotels = weddingConfig.hotels ?? [];
+  const isAttending = formData.attendance === 'yes';
+  const dietaryRestrictions = formData.dietaryPreference === 'other'
+    ? formData.dietaryOther
+    : ({ vegetarian: 'Vegetariano', vegan: 'Vegano', celiac: 'Celíaco' }[formData.dietaryPreference] ?? '');
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(245,238,225,0.7),_transparent_60%)] text-stone-800">
@@ -144,7 +154,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="gran-dia" className="scroll-mt-12 bg-white px-4 py-20 sm:px-6 lg:px-8">
+      <section id="gran-dia" className="scroll-mt-12 bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">El gran día</p>
@@ -183,7 +193,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="como-llegar" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-20 sm:px-6 lg:px-8">
+      <section id="como-llegar" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Cómo llegar</p>
           <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -203,7 +213,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="confirmacion" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
+      <section id="confirmacion" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <div className="mb-8 text-center">
             <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Confirmación</p>
@@ -226,9 +236,9 @@ export default function Home() {
 
               const payload = {
                 fullName: formData.fullName,
-                spouseName: formData.spouseName,
+                spouseName: formData.hasCompanion === 'yes' ? formData.spouseName : '',
                 attendance: formData.attendance,
-                dietaryRestrictions: formData.dietaryRestrictions,
+                dietaryRestrictions: isAttending && formData.dietaryNeeds === 'yes' ? dietaryRestrictions : '',
                 message: formData.message,
               };
 
@@ -260,16 +270,8 @@ export default function Home() {
             />
             {errors.fullName && <p className="text-sm text-red-700">{errors.fullName}</p>}
 
-            <input
-              aria-label="Nombre de marido o señora"
-              placeholder="Nombre de marido / señora (opcional)"
-              value={formData.spouseName}
-              onChange={(e) => setFormData((s) => ({ ...s, spouseName: e.target.value }))}
-              className="rounded-md border border-stone-200 px-4 py-3"
-            />
-
             <fieldset>
-              <legend className="mb-3 text-sm font-medium text-stone-700">¿Podrás acompañarnos?</legend>
+              <legend className="mb-3 text-base font-medium text-stone-700">¿Podrás acompañarnos en nuestro matrimonio?</legend>
               <div className="grid grid-cols-2 gap-3">
                 <button type="button" aria-pressed={formData.attendance === 'yes'} onClick={() => setFormData((s) => ({ ...s, attendance: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.attendance === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>
                   Sí, asistiré
@@ -281,16 +283,40 @@ export default function Home() {
               {errors.attendance && <p className="mt-2 text-sm text-red-700">{errors.attendance}</p>}
             </fieldset>
 
-            <input
-              placeholder="Restricciones alimentarias"
-              value={formData.dietaryRestrictions}
-              onChange={(e) => setFormData((s) => ({ ...s, dietaryRestrictions: e.target.value }))}
-              className="rounded-md border border-stone-200 px-4 py-3"
-            />
+            {isAttending && (
+              <>
+                <fieldset>
+                  <legend className="mb-3 text-base font-medium text-stone-700">¿Vendrás con tu marido / señora?</legend>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button type="button" aria-pressed={formData.hasCompanion === 'yes'} onClick={() => setFormData((s) => ({ ...s, hasCompanion: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.hasCompanion === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>Sí</button>
+                    <button type="button" aria-pressed={formData.hasCompanion === 'no'} onClick={() => setFormData((s) => ({ ...s, hasCompanion: 'no', spouseName: '' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.hasCompanion === 'no' ? 'border-stone-500 bg-stone-600 text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>No</button>
+                  </div>
+                </fieldset>
+                {formData.hasCompanion === 'yes' && <input aria-label="Nombre de marido o señora" placeholder="¿Cómo se llama tu marido / señora?" value={formData.spouseName} onChange={(e) => setFormData((s) => ({ ...s, spouseName: e.target.value }))} className="rounded-md border border-stone-200 px-4 py-3" />}
+                <fieldset>
+                  <legend className="mb-3 text-base font-medium text-stone-700">¿Tienes alguna restricción alimentaria?</legend>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button type="button" aria-pressed={formData.dietaryNeeds === 'yes'} onClick={() => setFormData((s) => ({ ...s, dietaryNeeds: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.dietaryNeeds === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>Sí</button>
+                    <button type="button" aria-pressed={formData.dietaryNeeds === 'no'} onClick={() => setFormData((s) => ({ ...s, dietaryNeeds: 'no', dietaryPreference: '', dietaryOther: '' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.dietaryNeeds === 'no' ? 'border-stone-500 bg-stone-600 text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>No</button>
+                  </div>
+                </fieldset>
+                {formData.dietaryNeeds === 'yes' && (
+                  <fieldset>
+                    <legend className="mb-3 text-base font-medium text-stone-700">Cuéntanos cuál:</legend>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                      {[['vegetarian', 'Vegetariano'], ['vegan', 'Vegano'], ['celiac', 'Celíaco'], ['other', 'Otro']].map(([value, label]) => (
+                        <button key={value} type="button" aria-pressed={formData.dietaryPreference === value} onClick={() => setFormData((s) => ({ ...s, dietaryPreference: value as FormState['dietaryPreference'], dietaryOther: value === 'other' ? s.dietaryOther : '' }))} className={`rounded-full border px-3 py-3 text-sm font-semibold transition ${formData.dietaryPreference === value ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>{label}</button>
+                      ))}
+                    </div>
+                    {formData.dietaryPreference === 'other' && <input aria-label="Otra restricción alimentaria" placeholder="Escribe tu restricción alimentaria" value={formData.dietaryOther} onChange={(e) => setFormData((s) => ({ ...s, dietaryOther: e.target.value }))} className="mt-3 w-full rounded-md border border-stone-200 px-4 py-3" />}
+                  </fieldset>
+                )}
+              </>
+            )}
 
             <div className="rounded-xl bg-[#fcf7ef] p-4">
-              <label htmlFor="message" className="font-serif text-xl text-stone-800">¡Déjanos un mensaje, con mucho cariño! ❤️</label>
-              <textarea id="message" placeholder="Tu mensaje para los novios" value={formData.message} onChange={(e) => setFormData((s) => ({ ...s, message: e.target.value }))} className="mt-3 min-h-[120px] w-full rounded-md border border-stone-200 bg-white px-4 py-3" />
+              <label htmlFor="message" className="font-serif text-xl font-semibold uppercase tracking-wide text-stone-800">¡DÉJANOS UN MENSAJE A LOS NOVIOS! 💌💖</label>
+              <textarea id="message" placeholder="Queremos leer tus buenos deseos y palabras bonitas ✨" value={formData.message} onChange={(e) => setFormData((s) => ({ ...s, message: e.target.value }))} className="mt-3 min-h-[120px] w-full rounded-md border border-stone-200 bg-white px-4 py-3" />
             </div>
 
             <div className="flex items-center justify-between gap-4">
@@ -301,7 +327,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="whatsapp" className="scroll-mt-12 bg-white px-4 py-20 sm:px-6 lg:px-8">
+      <section id="whatsapp" className="scroll-mt-12 bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Mantengámonos en contacto</p>
           <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Únete al grupo de WhatsApp</h2>
@@ -312,7 +338,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
+      <section className="bg-[#f8f4eb] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Regalos</p>
           <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Opciones para regalar</h2>
@@ -340,7 +366,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="quedarte" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-20 sm:px-6 lg:px-8">
+      <section id="quedarte" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-4 text-center sm:text-left">
             <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">¿Te quedarás?</p>
@@ -360,20 +386,20 @@ export default function Home() {
           <div className="mt-12 rounded-[2rem] border border-stone-200 bg-white/80 p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
             <p className="text-lg text-stone-700">¿Necesitas transporte desde tu hotel al matrimonio?</p>
             <p className="mt-3 text-stone-600">Nosotros te ayudamos a coordinarlo.</p>
-            <a href={weddingConfig.whatsappContactUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-              Coordinar transporte por WhatsApp
+            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+              Unirme al grupo de WhatsApp
             </a>
           </div>
         </div>
       </section>
 
-      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
+      <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
           <Image src="/couple-gallery.svg" alt="Compromiso de Rosario y Ignacio" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
         </div>
       </section>
 
-      <section id="musica" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-20 sm:px-6 lg:px-8">
+      <section id="musica" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-white/80 p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Ayúdanos con la música</p>
           <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">¿Qué canción no puede faltar?</h2>
@@ -388,7 +414,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="recuerdos" className={`scroll-mt-12 px-4 py-20 sm:px-6 lg:px-8 ${isAfterWedding ? 'bg-[#f8f4eb]' : 'bg-[#fcf7ef]'}`}>
+      <section id="recuerdos" className={`scroll-mt-12 px-4 py-12 sm:px-6 sm:py-16 lg:px-8 ${isAfterWedding ? 'bg-[#f8f4eb]' : 'bg-[#fcf7ef]'}`}>
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Comparte tus recuerdos</p>
           <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">{isAfterWedding ? 'Tus fotos y videos serán parte de este recuerdo' : 'Comparte tus recuerdos'}</h2>
@@ -399,7 +425,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
+      <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
           <Image src="/couple-gallery.svg" alt="Gracias por acompañarnos" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
         </div>
