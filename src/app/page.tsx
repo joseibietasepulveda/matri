@@ -55,6 +55,7 @@ export default function Home() {
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [bankDetailsCopied, setBankDetailsCopied] = useState(false);
 
   const weddingDate = useMemo(() => new Date(weddingConfig.weddingDate), []);
 
@@ -105,6 +106,17 @@ export default function Home() {
     guestDietaryRestriction && `Invitado/a: ${guestDietaryRestriction}`,
     companionDietaryRestriction && `Acompañante: ${companionDietaryRestriction}`,
   ].filter(Boolean).join(' · ');
+  const bankDetails = 'Nombre: Rosario Jesús Vial Letelier\nRUT: 19.079.773-2\nBanco: Banco de Chile\nTipo de cuenta: Cuenta Corriente\nNro. cuenta: 00-001-93650-06\nMail: revial@uc.cl';
+
+  const copyBankDetails = async () => {
+    try {
+      await navigator.clipboard.writeText(bankDetails);
+      setBankDetailsCopied(true);
+      window.setTimeout(() => setBankDetailsCopied(false), 2500);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(245,238,225,0.7),_transparent_60%)] text-stone-800">
@@ -252,7 +264,7 @@ export default function Home() {
           <div className="mb-8 text-center">
             <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Confirmación</p>
             <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Confirma tu asistencia</h2>
-            <p className="mt-3 text-stone-700">Completa el formulario y confirma tu asistencia. Gracias.</p>
+            <p className="mt-3 text-stone-700">Completa el formulario y confirma tu asistencia. ¡Gracias!</p>
           </div>
 
           <form
@@ -452,6 +464,9 @@ export default function Home() {
                 <p><span className="font-semibold text-stone-900">Nro. cuenta:</span> <span>00-001-93650-06</span></p>
                 <p><span className="font-semibold text-stone-900">Mail:</span> <span>revial@uc.cl</span></p>
               </div>
+              <button type="button" onClick={copyBankDetails} className="mt-6 inline-flex rounded-full border border-[#6f7957] px-5 py-3 font-semibold text-[#586045] transition hover:bg-[#eef0e7]">
+                {bankDetailsCopied ? '¡Datos copiados!' : 'Copiar datos'}
+              </button>
             </div>
           </div>
         </div>
@@ -469,7 +484,7 @@ export default function Home() {
           <article className="rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
             <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">¿Te vas desde Santiago y quieres tomar tranquilo?</h2>
             <p className="mx-auto mt-4 max-w-xl text-stone-700">Métete a este WhatsApp para ponerte de acuerdo con otras personas y armar grupos para transfers.</p>
-            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+            <a href={weddingConfig.whatsappSantiagoUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
               Unirme al grupo de WhatsApp
             </a>
           </article>
@@ -524,7 +539,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-white/80 p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Ayúdanos con la música</p>
           <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">¿Qué canción no puede faltar?</h2>
-          <p className="mx-auto mt-4 max-w-3xl text-stone-700">Para agregar canciones, debes apretar el link, seleccionar “Unirte” y luego podrás buscar canciones. Dentro de Apple Music, aprieta los 3 puntitos de una canción. Abajo de la lista verás sugerencias, pero también puedes buscar cualquier canción en la lupa de arriba y, a la derecha de la canción, en los tres puntitos, apretar “Añadir lista de reproducción” y agregar a “Matri Nacho Yayo 🪩💃🏼🕺🏻”.</p>
+          <p className="mx-auto mt-4 max-w-3xl text-stone-700">Para agregar canciones, debes apretar el link, seleccionar “Unirte” y luego podrás buscar canciones. Dentro de Apple Music, aprieta los 3 puntitos de una canción. Abajo de la lista verás sugerencias, pero también puedes buscar cualquier canción en la lupa de arriba y, a la derecha de la canción, en los tres puntitos, apretar <strong>“Añadir lista de reproducción”</strong> y agregar a <strong>“Matri Nacho y Yayo 🪩💃🏼🕺🏻”</strong>.</p>
           {weddingConfig.youtubeMusicPlaylistUrl ? (
             <a href={weddingConfig.youtubeMusicPlaylistUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
               Abrir playlist colaborativa
@@ -550,9 +565,6 @@ export default function Home() {
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-lg leading-8 text-stone-700">{weddingConfig.gratitudeText}</p>
           <h2 className="mt-6 font-serif text-3xl text-stone-800 sm:text-4xl">{weddingConfig.footerSignature}</h2>
-          <a href={weddingConfig.whatsappShareUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-            Compartir por WhatsApp
-          </a>
         </div>
         <figure className="relative mx-auto mt-10 min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
           <Image

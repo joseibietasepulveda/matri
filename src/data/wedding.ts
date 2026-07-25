@@ -52,6 +52,7 @@ export type WeddingConfig = {
   youtubeMusicPlaylistUrl?: string;
   sharedAlbumUrl?: string;
   whatsappGroupUrl?: string;
+  whatsappSantiagoUrl?: string;
   whatsappShareUrl?: string;
   whatsappContactUrl?: string;
   hotels?: Hotel[];
@@ -85,6 +86,7 @@ export const weddingConfig: WeddingConfig = {
   youtubeMusicPlaylistUrl: "https://music.youtube.com/playlist?list=PLYTAt1dPospo&jct=Ew4DF4zE5hu8Bdr7-Pc8OQ",
   sharedAlbumUrl: "https://photos.app.goo.gl/r4JitWdmZpBjNkmQ6",
   whatsappGroupUrl: "https://chat.whatsapp.com/IrBJdzXdZGMJKAVVfPWSGm?s=sw&p=i&ilr=0",
+  whatsappSantiagoUrl: "https://chat.whatsapp.com/IWMLwjUl4ci7Wq5pvB1Uva?s=cl&p=i&ilr=4",
   whatsappShareUrl: "https://wa.me/?text=Te%20invito%20a%20compartir%20este%20d%C3%ADa%20tan%20especial%20con%20nosotros%20Rosario%20%26%20Ignacio.",
   whatsappContactUrl: "https://wa.me/56912345678?text=Hola%2C%20necesito%20coordinar%20transporte%20para%20el%20matrimonio.",
   hotels: [
