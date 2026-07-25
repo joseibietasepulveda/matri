@@ -124,8 +124,8 @@ export const weddingConfig: WeddingConfig = {
   dressCode: "Tenida formal",
   formEndpoint: "/api/confirm",
   dressNotes: [],
-  gratitudeText: "Estamos muy felices de celebrar este día junto a ustedes.",
-  footerSignature: "Rosario & Ignacio",
+  gratitudeText: "¡Estamos muy felices de celebrar este día junto a ustedes!",
+  footerSignature: "Rosario & José Ignacio",
   images: {
     cover: "/images/wedding/cover.jpg",
     couple: ["/images/wedding/couple-1.jpg", "/images/wedding/couple-2.jpg"],

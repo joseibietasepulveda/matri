@@ -563,7 +563,7 @@ export default function Home() {
 
       <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
-          <p className="text-lg leading-8 text-stone-700">{weddingConfig.gratitudeText}</p>
+          <p className="text-xl leading-8 text-stone-700">{weddingConfig.gratitudeText}</p>
           <h2 className="mt-6 font-serif text-3xl text-stone-800 sm:text-4xl">{weddingConfig.footerSignature}</h2>
         </div>
         <figure className="relative mx-auto mt-10 min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
