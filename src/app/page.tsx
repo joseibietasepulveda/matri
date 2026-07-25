@@ -140,8 +140,10 @@ export default function Home() {
               {weddingConfig.coupleName}
             </h1>
             <p className="mt-4 text-2xl font-light sm:text-3xl">¡Nos casamos!</p>
-            <p className="mt-8 text-lg uppercase tracking-[0.3em] text-stone-200">
-              {weddingConfig.weddingDateLabel}
+            <p className="mt-8 uppercase tracking-[0.3em] text-stone-200">
+              <span className="text-lg">20</span>{' '}
+              <span className="text-lg">DE FEBRERO</span>{' '}
+              <span className="text-lg">DE 2027</span>
             </p>
             {isAfterWedding ? (
               <div className="mt-8 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-lg font-medium">
