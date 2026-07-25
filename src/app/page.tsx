@@ -54,7 +54,7 @@ export default function Home() {
   const [isAfterWedding, setIsAfterWedding] = useState(false);
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [submitted, setSubmitted] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   const weddingDate = useMemo(() => new Date(weddingConfig.weddingDate), []);
 
@@ -259,6 +259,7 @@ export default function Home() {
             className="mx-auto grid max-w-2xl gap-4 rounded-[1rem] border border-stone-200 bg-white/80 p-6"
             onSubmit={async (e) => {
               e.preventDefault();
+              if (submissionStatus === 'sending') return;
               setErrors({});
               if (!formData.fullName.trim() || !formData.attendance) {
                 setErrors({
@@ -277,6 +278,7 @@ export default function Home() {
               };
 
               try {
+                setSubmissionStatus('sending');
                 const res = await fetch('/api/confirm', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -284,13 +286,11 @@ export default function Home() {
                 });
 
                 if (!res.ok) throw new Error('Error enviando la confirmación');
-                setSubmitted(true);
+                setSubmissionStatus('success');
                 setFormData(initialFormState);
               } catch (err) {
-                setSubmitted(false);
-                // show minimal error
                 console.error(err);
-                setErrors({ fullName: 'No se pudo enviar. Intenta más tarde.' });
+                setSubmissionStatus('error');
               }
             }}
           >
@@ -378,12 +378,44 @@ export default function Home() {
             </div>
 
             <div className="flex items-center justify-between gap-4">
-              <button type="submit" className="rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white">Enviar</button>
-              {submitted && <span className="text-green-600">Confirmación enviada. ¡Gracias!</span>}
+              <button type="submit" disabled={submissionStatus === 'sending'} className="rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60">
+                {submissionStatus === 'sending' ? 'Enviando...' : 'Enviar'}
+              </button>
             </div>
           </form>
         </div>
       </section>
+
+      {submissionStatus !== 'idle' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/45 px-4" role="dialog" aria-modal="true" aria-labelledby="submission-title">
+          <div className="w-full max-w-md rounded-[2rem] bg-white p-8 text-center shadow-[0_30px_80px_rgba(0,0,0,0.25)]">
+            {submissionStatus === 'sending' ? (
+              <>
+                <p className="text-3xl" aria-hidden="true">✉️</p>
+                <h2 id="submission-title" className="mt-4 font-serif text-3xl text-stone-800">Enviando tus datos...</h2>
+                <p className="mt-3 text-stone-600">Por favor, espera un momento.</p>
+              </>
+            ) : submissionStatus === 'success' ? (
+              <>
+                <p className="text-3xl" aria-hidden="true">💌</p>
+                <h2 id="submission-title" className="mt-4 font-serif text-3xl text-stone-800">¡Datos enviados!</h2>
+                <p className="mt-3 text-stone-600">Tu confirmación quedó guardada. ¡Gracias!</p>
+              </>
+            ) : (
+              <>
+                <p className="text-3xl" aria-hidden="true">⚠️</p>
+                <h2 id="submission-title" className="mt-4 font-serif text-3xl text-stone-800">No se enviaron los datos</h2>
+                <p className="mt-3 text-stone-600">Inténtalo nuevamente en un momento.</p>
+              </>
+            )}
+            {submissionStatus !== 'sending' && (
+              <button type="button" onClick={() => setSubmissionStatus('idle')} className="mt-8 rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+                Entendido
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <figure className="relative mx-auto min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
