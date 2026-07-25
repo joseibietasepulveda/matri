@@ -75,7 +75,7 @@ export const weddingConfig: WeddingConfig = {
   venueAddress: "Las Nieves, SN, Rengo, Región de O´Higgins",
   googleMapsUrl:
     "https://www.google.com/maps/place/Vi%C3%B1edos+Torreon+de+Paredes/@-34.4061997,-70.8292092,17z/data=!3m1!4b1!4m6!3m5!1s0x96649f96102a6f6b:0xb78cd14d8f2d81ef!8m2!3d-34.4062042!4d-70.8266343!16s%252Fg%252F11xfx8d9p?hl=es-cl&entry=ttu&g_ep=EgoyMDI2MDcxNC4wIKXMDSoASAFQAw%3D%3D",
-  wazeUrl: "https://waze.com/ul?q=Vi%C3%B1edos+Torreon+de+Paredes&Rengo%2C+Regi%C3%B3n+de+O%E2%80%99Higgins&navigate=yes",
+  wazeUrl: "https://waze.com/ul?ll=-34.4062042%2C-70.8266343&navigate=yes&zoom=17",
   calendarTitle: "Matrimonio Rosario & Ignacio",
   calendarDescription: "Matrimonio en Rengo",
   calendarLocation: "Viñedos Torreón de Paredes, Rengo, Región de O´Higgins",

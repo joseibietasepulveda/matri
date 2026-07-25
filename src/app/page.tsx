@@ -429,25 +429,6 @@ export default function Home() {
         </figure>
       </section>
 
-      <section id="whatsapp" className="scroll-mt-12 bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
-          <article className="rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
-            <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">¿Te quedas cerca de Rengo y quieres tomar tranquilo?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-stone-700">Métete a este grupo de WhatsApp para que te ayudemos a organizar transfers desde los hoteles.</p>
-            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-              Unirme al grupo de WhatsApp
-            </a>
-          </article>
-          <article className="rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
-            <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">¿Te vas desde Santiago y quieres tomar tranquilo?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-stone-700">Métete a este WhatsApp para ponerte de acuerdo con otras personas y armar grupos para transfers.</p>
-            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-              Unirme al grupo de WhatsApp
-            </a>
-          </article>
-        </div>
-      </section>
-
       <section className="bg-[#f8f4eb] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-5xl rounded-[2rem] border border-stone-200 bg-white/80 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Regalos</p>
@@ -473,6 +454,25 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="whatsapp" className="scroll-mt-12 bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
+          <article className="rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
+            <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">¿Te quedas cerca de Rengo y quieres tomar tranquilo?</h2>
+            <p className="mx-auto mt-4 max-w-xl text-stone-700">Métete a este grupo de WhatsApp para que te ayudemos a organizar transfers desde los hoteles.</p>
+            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+              Unirme al grupo de WhatsApp
+            </a>
+          </article>
+          <article className="rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
+            <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">¿Te vas desde Santiago y quieres tomar tranquilo?</h2>
+            <p className="mx-auto mt-4 max-w-xl text-stone-700">Métete a este WhatsApp para ponerte de acuerdo con otras personas y armar grupos para transfers.</p>
+            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+              Unirme al grupo de WhatsApp
+            </a>
+          </article>
         </div>
       </section>
 
@@ -505,13 +505,6 @@ export default function Home() {
               </article>
             ))}
           </div>
-          <div className="mt-12 rounded-[2rem] border border-stone-200 bg-white/80 p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
-            <p className="text-lg text-stone-700">¿Necesitas transporte desde tu hotel al matrimonio?</p>
-            <p className="mt-3 text-stone-600">Nosotros te ayudamos a coordinarlo.</p>
-            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-              Unirme al grupo de WhatsApp
-            </a>
-          </div>
         </div>
       </section>
 
@@ -522,7 +515,7 @@ export default function Home() {
             alt="Rosario e Ignacio en Punta Cana"
             fill
             sizes="(max-width: 1024px) 100vw, 80vw"
-            className="object-cover"
+            className="object-cover object-[50%_20%]"
           />
         </figure>
       </section>
