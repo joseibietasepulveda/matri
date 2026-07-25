@@ -162,7 +162,7 @@ export default function Home() {
                     alt="Rosario e Ignacio"
                     fill
                     sizes="(max-width: 768px) 100vw, 70vw"
-                    className="object-cover object-center"
+                    className="object-cover object-[50%_70%]"
                   />
                 </div>
               </div>
