@@ -396,8 +396,34 @@ export default function Home() {
       </section>
 
       <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
-          <Image src="/couple-gallery.svg" alt="Compromiso de Rosario y Ignacio" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
+        <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-[0.86fr_1.14fr] md:grid-rows-2">
+          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 md:row-span-2 md:min-h-[720px]">
+            <Image
+              src="/images/wedding/editorial/01.jpg"
+              alt="Rosario e Ignacio frente a una puerta pintada"
+              fill
+              sizes="(min-width: 768px) 42vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
+          <figure className="relative min-h-[280px] overflow-hidden rounded-[2rem] border border-stone-200 md:min-h-0">
+            <Image
+              src="/images/wedding/editorial/02.jpg"
+              alt="Rosario e Ignacio de viaje frente a un castillo"
+              fill
+              sizes="(min-width: 768px) 58vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
+          <figure className="relative min-h-[280px] overflow-hidden rounded-[2rem] border border-stone-200 md:min-h-0">
+            <Image
+              src="/images/wedding/editorial/03.jpg"
+              alt="Rosario e Ignacio en la montaña"
+              fill
+              sizes="(min-width: 768px) 58vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
         </div>
       </section>
 
@@ -428,8 +454,56 @@ export default function Home() {
       </section>
 
       <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-stone-200">
-          <Image src="/couple-gallery.svg" alt="Gracias por acompañarnos" width={1600} height={1000} className="h-[420px] w-full object-cover sm:h-[560px]" />
+        <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-12">
+          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-5 lg:min-h-[640px]">
+            <Image
+              src="/images/wedding/editorial/04.jpg"
+              alt="Rosario e Ignacio juntos en un columpio"
+              fill
+              sizes="(min-width: 1024px) 42vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
+          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-7 lg:mt-20 lg:min-h-[560px]">
+            <Image
+              src="/images/wedding/editorial/05.jpg"
+              alt="Rosario e Ignacio al atardecer"
+              fill
+              sizes="(min-width: 1024px) 58vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
+          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-4 lg:min-h-[580px]">
+            <Image
+              src="/images/wedding/editorial/06.jpg"
+              alt="Rosario e Ignacio en la playa"
+              fill
+              sizes="(min-width: 1024px) 34vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
+          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-4 lg:-mt-8 lg:min-h-[580px]">
+            <Image
+              src="/images/wedding/editorial/07.jpg"
+              alt="Rosario e Ignacio junto al agua al atardecer"
+              fill
+              loading="eager"
+              unoptimized
+              sizes="(min-width: 1024px) 34vw, (min-width: 640px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
+          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 sm:col-span-2 lg:col-span-4 lg:min-h-[580px]">
+            <Image
+              src="/images/wedding/editorial/08.jpg"
+              alt="Rosario e Ignacio caminando frente a una puesta de sol"
+              fill
+              loading="eager"
+              unoptimized
+              sizes="(min-width: 1024px) 34vw, (min-width: 640px) 100vw, 100vw"
+              className="object-cover"
+            />
+          </figure>
         </div>
         <div className="mx-auto mt-10 max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-lg leading-8 text-stone-700">{weddingConfig.gratitudeText}</p>
