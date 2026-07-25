@@ -133,7 +133,7 @@ export default function Home() {
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-[#0f0b08]/80" />
-        <div className="relative z-10 w-full max-w-6xl rounded-[2rem] border border-white/20 bg-white/10 px-6 py-10 shadow-[0_30px_80px_rgba(0,0,0,0.25)] backdrop-blur-md sm:px-10 lg:px-16 lg:py-16">
+        <div className="relative z-10 w-full max-w-6xl rounded-[2rem] border border-white/20 bg-white/10 px-6 py-8 shadow-[0_30px_80px_rgba(0,0,0,0.25)] backdrop-blur-md sm:px-10 sm:py-10 lg:px-16 lg:py-12">
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center text-white">
             <p className="mb-4 text-sm uppercase tracking-[0.35em] text-stone-200">Invitación</p>
             <h1 className="font-serif text-4xl font-semibold tracking-[0.2em] sm:text-5xl lg:text-7xl">
@@ -166,7 +166,7 @@ export default function Home() {
                 ))}
               </div>
             )}
-            <div className="mt-8 w-full max-w-2xl">
+            <div className="mt-6 w-full max-w-2xl">
               <div className="overflow-hidden rounded-[1.5rem] border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.18)]">
                 <Image
                   src="/images/wedding/compromiso.jpg"
@@ -178,12 +178,6 @@ export default function Home() {
                 />
               </div>
             </div>
-            <Link
-              href="#gran-dia"
-              className="mt-10 inline-flex items-center rounded-full border border-white/30 bg-[#e7dcc8] px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-stone-800 transition hover:scale-[1.02]"
-            >
-              Ver detalles
-            </Link>
           </div>
         </div>
       </section>
