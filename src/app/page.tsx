@@ -156,15 +156,14 @@ export default function Home() {
             )}
             <div className="mt-8 w-full max-w-2xl">
               <div className="overflow-hidden rounded-[1.5rem] border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.18)]">
-                <div className="relative h-64 overflow-hidden rounded-[1.15rem] sm:h-80">
-                  <Image
-                    src="/images/wedding/compromiso.jpg"
-                    alt="Rosario e Ignacio"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 70vw"
-                    className="object-cover object-[50%_70%]"
-                  />
-                </div>
+                <Image
+                  src="/images/wedding/compromiso.jpg"
+                  alt="Rosario e Ignacio"
+                  width={4032}
+                  height={3024}
+                  sizes="(max-width: 768px) 100vw, 70vw"
+                  className="h-auto w-full"
+                />
               </div>
             </div>
             <Link
