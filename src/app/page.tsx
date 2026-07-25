@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { weddingConfig } from '@/data/wedding';
 
 type AttendanceValue = 'yes' | 'no';
+type DietaryPreference = 'vegetarian' | 'vegan' | 'celiac' | 'other' | '';
 
 type FormState = {
   fullName: string;
@@ -13,8 +14,11 @@ type FormState = {
   spouseName: string;
   attendance: AttendanceValue | '';
   dietaryNeeds: AttendanceValue | '';
-  dietaryPreference: 'vegetarian' | 'vegan' | 'celiac' | 'other' | '';
+  dietaryPreference: DietaryPreference;
   dietaryOther: string;
+  companionDietaryNeeds: AttendanceValue | '';
+  companionDietaryPreference: DietaryPreference;
+  companionDietaryOther: string;
   message: string;
 };
 
@@ -26,8 +30,23 @@ const initialFormState: FormState = {
   dietaryNeeds: '',
   dietaryPreference: '',
   dietaryOther: '',
+  companionDietaryNeeds: '',
+  companionDietaryPreference: '',
+  companionDietaryOther: '',
   message: '',
 };
+
+const dietaryLabels: Record<Exclude<DietaryPreference, ''>, string> = {
+  vegetarian: 'Vegetariano',
+  vegan: 'Vegano',
+  celiac: 'Celíaco',
+  other: 'Otro',
+};
+
+function getDietaryRestriction(preference: DietaryPreference, other: string) {
+  if (preference === 'other') return other.trim();
+  return preference ? dietaryLabels[preference] : '';
+}
 
 export default function Home() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -76,11 +95,16 @@ export default function Home() {
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(calendarTitle)}&dates=${calendarStartDate}/${calendarEndDate}&details=${encodeURIComponent(calendarDescription)}&location=${encodeURIComponent(calendarLocation)}`;
   const hotels = weddingConfig.hotels ?? [];
   const isAttending = formData.attendance === 'yes';
-  const dietaryRestrictions = formData.dietaryPreference === 'other'
-    ? formData.dietaryOther
-    : formData.dietaryPreference
-      ? { vegetarian: 'Vegetariano', vegan: 'Vegano', celiac: 'Celíaco' }[formData.dietaryPreference]
-      : '';
+  const guestDietaryRestriction = formData.dietaryNeeds === 'yes'
+    ? getDietaryRestriction(formData.dietaryPreference, formData.dietaryOther)
+    : '';
+  const companionDietaryRestriction = formData.hasCompanion === 'yes' && formData.companionDietaryNeeds === 'yes'
+    ? getDietaryRestriction(formData.companionDietaryPreference, formData.companionDietaryOther)
+    : '';
+  const dietaryRestrictions = [
+    guestDietaryRestriction && `Invitado/a: ${guestDietaryRestriction}`,
+    companionDietaryRestriction && `Acompañante: ${companionDietaryRestriction}`,
+  ].filter(Boolean).join(' · ');
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(245,238,225,0.7),_transparent_60%)] text-stone-800">
@@ -131,18 +155,15 @@ export default function Home() {
               </div>
             )}
             <div className="mt-8 w-full max-w-2xl">
-              <div className="overflow-hidden rounded-[1.5rem] border border-white/20 bg-white/10 p-2 shadow-[0_20px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm">
-                <div className="relative h-64 overflow-hidden rounded-[1.15rem] bg-[#f2e9dc] sm:h-80">
+              <div className="overflow-hidden rounded-[1.5rem] border border-white/20 shadow-[0_20px_40px_rgba(0,0,0,0.18)]">
+                <div className="relative h-64 overflow-hidden rounded-[1.15rem] sm:h-80">
                   <Image
                     src="/images/wedding/compromiso.jpg"
-                    alt="Foto del compromiso de Rosario y Ignacio"
+                    alt="Rosario e Ignacio"
                     fill
                     sizes="(max-width: 768px) 100vw, 70vw"
-                    className="object-contain object-center"
+                    className="object-cover object-center"
                   />
-                  <div className="absolute left-0 top-0 rounded-br-xl bg-black/25 px-3 py-2 backdrop-blur-sm">
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-stone-100">Compromiso</p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -215,6 +236,18 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <figure className="relative mx-auto min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
+          <Image
+            src="/images/wedding/sections/columpio.jpg"
+            alt="Rosario e Ignacio en un columpio"
+            fill
+            sizes="(max-width: 1024px) 100vw, 80vw"
+            className="object-cover"
+          />
+        </figure>
+      </section>
+
       <section id="confirmacion" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <div className="mb-8 text-center">
@@ -240,7 +273,7 @@ export default function Home() {
                 fullName: formData.fullName,
                 spouseName: formData.hasCompanion === 'yes' ? formData.spouseName : '',
                 attendance: formData.attendance,
-                dietaryRestrictions: isAttending && formData.dietaryNeeds === 'yes' ? dietaryRestrictions : '',
+                dietaryRestrictions: isAttending ? dietaryRestrictions : '',
                 message: formData.message,
               };
 
@@ -288,14 +321,6 @@ export default function Home() {
             {isAttending && (
               <>
                 <fieldset>
-                  <legend className="mb-3 text-base font-medium text-stone-700">¿Vendrás con tu marido / señora?</legend>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button type="button" aria-pressed={formData.hasCompanion === 'yes'} onClick={() => setFormData((s) => ({ ...s, hasCompanion: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.hasCompanion === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>Sí</button>
-                    <button type="button" aria-pressed={formData.hasCompanion === 'no'} onClick={() => setFormData((s) => ({ ...s, hasCompanion: 'no', spouseName: '' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.hasCompanion === 'no' ? 'border-stone-500 bg-stone-600 text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>No</button>
-                  </div>
-                </fieldset>
-                {formData.hasCompanion === 'yes' && <input aria-label="Nombre de marido o señora" placeholder="¿Cómo se llama tu marido / señora?" value={formData.spouseName} onChange={(e) => setFormData((s) => ({ ...s, spouseName: e.target.value }))} className="rounded-md border border-stone-200 px-4 py-3" />}
-                <fieldset>
                   <legend className="mb-3 text-base font-medium text-stone-700">¿Tienes alguna restricción alimentaria?</legend>
                   <div className="grid grid-cols-2 gap-3">
                     <button type="button" aria-pressed={formData.dietaryNeeds === 'yes'} onClick={() => setFormData((s) => ({ ...s, dietaryNeeds: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.dietaryNeeds === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>Sí</button>
@@ -313,6 +338,38 @@ export default function Home() {
                     {formData.dietaryPreference === 'other' && <input aria-label="Otra restricción alimentaria" placeholder="Escribe tu restricción alimentaria" value={formData.dietaryOther} onChange={(e) => setFormData((s) => ({ ...s, dietaryOther: e.target.value }))} className="mt-3 w-full rounded-md border border-stone-200 px-4 py-3" />}
                   </fieldset>
                 )}
+
+                <fieldset>
+                  <legend className="mb-3 text-base font-medium text-stone-700">¿Vendrás acompañado?</legend>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button type="button" aria-pressed={formData.hasCompanion === 'yes'} onClick={() => setFormData((s) => ({ ...s, hasCompanion: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.hasCompanion === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>Sí</button>
+                    <button type="button" aria-pressed={formData.hasCompanion === 'no'} onClick={() => setFormData((s) => ({ ...s, hasCompanion: 'no', spouseName: '', companionDietaryNeeds: '', companionDietaryPreference: '', companionDietaryOther: '' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.hasCompanion === 'no' ? 'border-stone-500 bg-stone-600 text-white' : 'border-stone-300 text-stone-700 hover:bg-stone-50'}`}>No</button>
+                  </div>
+                </fieldset>
+
+                {formData.hasCompanion === 'yes' && (
+                  <div className="grid gap-4 rounded-xl border border-stone-200 bg-[#fcf7ef] p-4">
+                    <input aria-label="Nombre del acompañante" placeholder="Nombre de tu acompañante" value={formData.spouseName} onChange={(e) => setFormData((s) => ({ ...s, spouseName: e.target.value }))} className="rounded-md border border-stone-200 bg-white px-4 py-3" />
+                    <fieldset>
+                      <legend className="mb-3 text-base font-medium text-stone-700">¿Tu acompañante tiene alguna restricción alimentaria?</legend>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button type="button" aria-pressed={formData.companionDietaryNeeds === 'yes'} onClick={() => setFormData((s) => ({ ...s, companionDietaryNeeds: 'yes' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.companionDietaryNeeds === 'yes' ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 bg-white text-stone-700 hover:bg-stone-50'}`}>Sí</button>
+                        <button type="button" aria-pressed={formData.companionDietaryNeeds === 'no'} onClick={() => setFormData((s) => ({ ...s, companionDietaryNeeds: 'no', companionDietaryPreference: '', companionDietaryOther: '' }))} className={`rounded-full border px-4 py-3 font-semibold transition ${formData.companionDietaryNeeds === 'no' ? 'border-stone-500 bg-stone-600 text-white' : 'border-stone-300 bg-white text-stone-700 hover:bg-stone-50'}`}>No</button>
+                      </div>
+                    </fieldset>
+                    {formData.companionDietaryNeeds === 'yes' && (
+                      <fieldset>
+                        <legend className="mb-3 text-base font-medium text-stone-700">Cuéntanos cuál:</legend>
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                          {[['vegetarian', 'Vegetariano'], ['vegan', 'Vegano'], ['celiac', 'Celíaco'], ['other', 'Otro']].map(([value, label]) => (
+                            <button key={value} type="button" aria-pressed={formData.companionDietaryPreference === value} onClick={() => setFormData((s) => ({ ...s, companionDietaryPreference: value as DietaryPreference, companionDietaryOther: value === 'other' ? s.companionDietaryOther : '' }))} className={`rounded-full border px-3 py-3 text-sm font-semibold transition ${formData.companionDietaryPreference === value ? 'border-[#6f7957] bg-[#6f7957] text-white' : 'border-stone-300 bg-white text-stone-700 hover:bg-stone-50'}`}>{label}</button>
+                          ))}
+                        </div>
+                        {formData.companionDietaryPreference === 'other' && <input aria-label="Otra restricción alimentaria del acompañante" placeholder="Escribe la restricción de tu acompañante" value={formData.companionDietaryOther} onChange={(e) => setFormData((s) => ({ ...s, companionDietaryOther: e.target.value }))} className="mt-3 w-full rounded-md border border-stone-200 bg-white px-4 py-3" />}
+                      </fieldset>
+                    )}
+                  </div>
+                )}
               </>
             )}
 
@@ -327,6 +384,18 @@ export default function Home() {
             </div>
           </form>
         </div>
+      </section>
+
+      <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <figure className="relative mx-auto min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
+          <Image
+            src="/images/wedding/sections/brasil.jpg"
+            alt="Rosario e Ignacio en Brasil"
+            fill
+            sizes="(max-width: 1024px) 100vw, 80vw"
+            className="object-cover"
+          />
+        </figure>
       </section>
 
       <section id="whatsapp" className="scroll-mt-12 bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
@@ -368,6 +437,18 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <figure className="relative mx-auto min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
+          <Image
+            src="/images/wedding/sections/manquehuito.jpg"
+            alt="Rosario e Ignacio en Manquehuito"
+            fill
+            sizes="(max-width: 1024px) 100vw, 80vw"
+            className="object-cover"
+          />
+        </figure>
+      </section>
+
       <section id="quedarte" className="scroll-mt-12 bg-[#f8f4eb] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-4 text-center sm:text-left">
@@ -396,45 +477,25 @@ export default function Home() {
       </section>
 
       <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-[0.86fr_1.14fr] md:grid-rows-2">
-          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 md:row-span-2 md:min-h-[720px]">
-            <Image
-              src="/images/wedding/editorial/01.jpg"
-              alt="Rosario e Ignacio frente a una puerta pintada"
-              fill
-              sizes="(min-width: 768px) 42vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-          <figure className="relative min-h-[280px] overflow-hidden rounded-[2rem] border border-stone-200 md:min-h-0">
-            <Image
-              src="/images/wedding/editorial/02.jpg"
-              alt="Rosario e Ignacio de viaje frente a un castillo"
-              fill
-              sizes="(min-width: 768px) 58vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-          <figure className="relative min-h-[280px] overflow-hidden rounded-[2rem] border border-stone-200 md:min-h-0">
-            <Image
-              src="/images/wedding/editorial/03.jpg"
-              alt="Rosario e Ignacio en la montaña"
-              fill
-              sizes="(min-width: 768px) 58vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-        </div>
+        <figure className="relative mx-auto min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
+          <Image
+            src="/images/wedding/sections/punta-cana.jpg"
+            alt="Rosario e Ignacio en Punta Cana"
+            fill
+            sizes="(max-width: 1024px) 100vw, 80vw"
+            className="object-cover"
+          />
+        </figure>
       </section>
 
       <section id="musica" className="scroll-mt-12 bg-[#fcf7ef] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-white/80 p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Ayúdanos con la música</p>
           <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">¿Qué canción no puede faltar?</h2>
-          <p className="mx-auto mt-4 max-w-xl text-stone-700">Agrega esas canciones que no pueden faltar en la fiesta.</p>
+          <p className="mx-auto mt-4 max-w-3xl text-stone-700">Para agregar canciones, debes apretar el link, seleccionar “Unirte” y luego podrás buscar canciones. Dentro de Apple Music, aprieta los 3 puntitos de una canción. Abajo de la lista verás sugerencias, pero también puedes buscar cualquier canción en la lupa de arriba y, a la derecha de la canción, en los tres puntitos, apretar “Añadir lista de reproducción” y agregar a “Matri Nacho Yayo 🪩💃🏼🕺🏻”.</p>
           {weddingConfig.youtubeMusicPlaylistUrl ? (
             <a href={weddingConfig.youtubeMusicPlaylistUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-              Abrir playlist colaborativa en YouTube Music
+              Abrir playlist colaborativa
             </a>
           ) : (
             <p className="mt-8 text-sm text-stone-500">La playlist colaborativa estará disponible muy pronto.</p>
@@ -454,64 +515,22 @@ export default function Home() {
       </section>
 
       <section className="bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-12">
-          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-5 lg:min-h-[640px]">
-            <Image
-              src="/images/wedding/editorial/04.jpg"
-              alt="Rosario e Ignacio juntos en un columpio"
-              fill
-              sizes="(min-width: 1024px) 42vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-7 lg:mt-20 lg:min-h-[560px]">
-            <Image
-              src="/images/wedding/editorial/05.jpg"
-              alt="Rosario e Ignacio al atardecer"
-              fill
-              sizes="(min-width: 1024px) 58vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-4 lg:min-h-[580px]">
-            <Image
-              src="/images/wedding/editorial/06.jpg"
-              alt="Rosario e Ignacio en la playa"
-              fill
-              sizes="(min-width: 1024px) 34vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 lg:col-span-4 lg:-mt-8 lg:min-h-[580px]">
-            <Image
-              src="/images/wedding/editorial/07.jpg"
-              alt="Rosario e Ignacio junto al agua al atardecer"
-              fill
-              loading="eager"
-              unoptimized
-              sizes="(min-width: 1024px) 34vw, (min-width: 640px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-          <figure className="relative min-h-[520px] overflow-hidden rounded-[2rem] border border-stone-200 sm:col-span-2 lg:col-span-4 lg:min-h-[580px]">
-            <Image
-              src="/images/wedding/editorial/08.jpg"
-              alt="Rosario e Ignacio caminando frente a una puesta de sol"
-              fill
-              loading="eager"
-              unoptimized
-              sizes="(min-width: 1024px) 34vw, (min-width: 640px) 100vw, 100vw"
-              className="object-cover"
-            />
-          </figure>
-        </div>
-        <div className="mx-auto mt-10 max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+        <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
           <p className="text-lg leading-8 text-stone-700">{weddingConfig.gratitudeText}</p>
           <h2 className="mt-6 font-serif text-3xl text-stone-800 sm:text-4xl">{weddingConfig.footerSignature}</h2>
           <a href={weddingConfig.whatsappShareUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
             Compartir por WhatsApp
           </a>
         </div>
+        <figure className="relative mx-auto mt-10 min-h-[440px] max-w-5xl overflow-hidden rounded-[2rem] border border-stone-200 sm:min-h-[620px]">
+          <Image
+            src="/images/wedding/sections/atardecer-columpio.jpg"
+            alt="Rosario e Ignacio al atardecer en un columpio"
+            fill
+            sizes="(max-width: 1024px) 100vw, 80vw"
+            className="object-cover"
+          />
+        </figure>
       </section>
     </main>
   );
