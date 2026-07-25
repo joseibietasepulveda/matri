@@ -399,13 +399,21 @@ export default function Home() {
       </section>
 
       <section id="whatsapp" className="scroll-mt-12 bg-white px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="mx-auto max-w-4xl rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
-          <p className="text-sm uppercase tracking-[0.35em] text-[#8b7353]">Mantengámonos en contacto</p>
-          <h2 className="mt-4 font-serif text-3xl text-stone-800 sm:text-4xl">Únete al grupo de WhatsApp</h2>
-          <p className="mx-auto mt-4 max-w-xl text-stone-700">Compartiremos información y coordinaremos los últimos detalles de esta celebración.</p>
-          <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
-            Unirme al grupo de WhatsApp
-          </a>
+        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
+          <article className="rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
+            <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">¿Te quedas cerca de Rengo y quieres tomar tranquilo?</h2>
+            <p className="mx-auto mt-4 max-w-xl text-stone-700">Métete a este grupo de WhatsApp para que te ayudemos a organizar transfers desde los hoteles.</p>
+            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+              Unirme al grupo de WhatsApp
+            </a>
+          </article>
+          <article className="rounded-[2rem] border border-stone-200 bg-[#fcf7ef] p-8 text-center shadow-[0_20px_50px_rgba(0,0,0,0.05)] sm:p-10">
+            <h2 className="font-serif text-3xl text-stone-800 sm:text-4xl">¿Te vas desde Santiago y quieres tomar tranquilo?</h2>
+            <p className="mx-auto mt-4 max-w-xl text-stone-700">Métete a este WhatsApp para ponerte de acuerdo con otras personas y armar grupos para transfers.</p>
+            <a href={weddingConfig.whatsappGroupUrl} target="_blank" rel="noreferrer" className="mt-8 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+              Unirme al grupo de WhatsApp
+            </a>
+          </article>
         </div>
       </section>
 
@@ -417,7 +425,7 @@ export default function Home() {
             <div className="rounded-[1.5rem] border border-stone-200 bg-stone-50 p-6 text-left">
               <h3 className="font-serif text-2xl text-stone-800">Lista de novios de Falabella</h3>
               <p className="mt-3 text-stone-600">Si prefieres regalar algo desde la lista oficial, puedes acceder aquí.</p>
-              <a href="https://www.falabella.com/falabella-cl/collection/lista-de-novios" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
+              <a href="https://novios.falabella.com/info-evento/evento?codigoEvento=2105613&ref=search" target="_blank" rel="noreferrer" className="mt-6 inline-flex rounded-full bg-[#6f7957] px-6 py-3 font-semibold text-white transition hover:opacity-90">
                 Ver lista de novios
               </a>
             </div>
